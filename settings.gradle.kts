@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Popcorn"
 include(":app")
+include(":design-system")
