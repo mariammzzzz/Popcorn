@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+
+    kotlin("plugin.serialization") version "2.4.0" //For Kotlin serialization (for navigation3)
 }
 
 android {
@@ -62,4 +64,11 @@ dependencies {
     implementation("io.insert-koin:koin-android")
     implementation("io.insert-koin:koin-compose")
     implementation("io.insert-koin:koin-compose-viewmodel")
+
+
+    //Navigation3
+    implementation("androidx.navigation3:navigation3-runtime:1.1.3")
+    implementation("androidx.navigation3:navigation3-ui:1.1.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-navigation3:2.11.0")
+
 }
