@@ -71,4 +71,8 @@ dependencies {
     implementation("androidx.navigation3:navigation3-ui:1.1.3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-navigation3:2.11.0")
 
+
+    //my own design system module
+    implementation(project(":design-system"))
+
 }

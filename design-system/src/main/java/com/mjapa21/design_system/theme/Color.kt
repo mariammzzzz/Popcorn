@@ -1,4 +1,4 @@
-package com.mjapa21.popcorn.ui.theme
+package com.mjapa21.design_system.theme
 
 import androidx.compose.ui.graphics.Color
 

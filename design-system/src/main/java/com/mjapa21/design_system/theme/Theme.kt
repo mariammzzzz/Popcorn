@@ -1,6 +1,5 @@
-package com.mjapa21.popcorn.ui.theme
+package com.mjapa21.design_system.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
