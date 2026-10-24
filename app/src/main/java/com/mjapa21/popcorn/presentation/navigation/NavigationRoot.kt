@@ -15,7 +15,19 @@ fun NavigationRoot(modifier: Modifier = Modifier, startDestination: Destination)
         backStack = backStack
     ) { navKey ->
         when (navKey) {
-            Destination.Login -> NavEntry(navKey) { Login(onLoginSuccess = {}, onSignUpClick = {}) } //todo fix this
+            Destination.Login -> NavEntry(navKey) {
+                Login(
+                    onLoginSuccess = {
+                        //todo
+                        //move to home and remove login from backstack
+
+                    },
+                    onSignUpClick = {
+                        //todo
+                    }
+                )
+            }
+
             Destination.SignUp -> NavEntry(navKey) { /* TODO: Implement SignUp screen */ }
             Destination.Home -> NavEntry(navKey) { /* TODO: Implement Home screen */ }
             else -> throw IllegalArgumentException("Unknown destination: $navKey")

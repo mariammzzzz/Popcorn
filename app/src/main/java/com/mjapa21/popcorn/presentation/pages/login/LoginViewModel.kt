@@ -1,31 +1,68 @@
 package com.mjapa21.popcorn.presentation.pages.login
 
-import android.util.Patterns
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mjapa21.popcorn.domain.validation.UserDataValidator
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
-    var state by mutableStateOf(LoginUiState())
-        private set
 
-    fun onEmailChange(value: String) {
-        state = state.copy(email = value, emailError = null)
+    private val _state = MutableStateFlow(LoginState())
+    val state: StateFlow<LoginState> = _state.asStateFlow()
+
+    private val eventChannel = Channel<LoginEvent>()
+    val events = eventChannel.receiveAsFlow()
+
+    fun onAction(action: LoginAction) {
+        when (action) {
+            is LoginAction.OnUsernameChange ->
+                _state.update { it.copy(username = action.username, usernameError = null) }
+
+            is LoginAction.OnPasswordChange ->
+                _state.update { it.copy(password = action.password, passwordError = null) }
+
+            LoginAction.OnLoginClick -> login()
+
+            LoginAction.OnSignUpClick ->
+                viewModelScope.launch { eventChannel.send(LoginEvent.NavigateToSignUp) }
+        }
     }
 
-    fun onPasswordChange(value: String) {
-        state = state.copy(password = value, passwordError = null)
+    private fun login() {
+        val current = _state.value
+        if (current.isLoading || !current.canSubmit || !validate()) return
+
+        val username = UserDataValidator.normalizeUsername(current.username)
+
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            try {
+                // TODO: real auth call with `username` + current.password
+                delay(1_500)
+                eventChannel.send(LoginEvent.NavigateToHome)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                eventChannel.send(LoginEvent.ShowError("Invalid username or password"))
+            } finally {
+                _state.update { it.copy(isLoading = false) }
+            }
+        }
     }
 
-    //todo implement properly
-    fun validate(): Boolean {
-        val emailValid = Patterns.EMAIL_ADDRESS.matcher(state.email.trim()).matches()
-        val passwordValid = state.password.length >= 6
-        state = state.copy(
-            emailError = if (emailValid) null else "Enter a valid email address",
-            passwordError = if (passwordValid) null else "Password must be at least 6 characters",
-        )
-        return emailValid && passwordValid
+    private fun validate(): Boolean {
+        val s = _state.value
+        val usernameError = UserDataValidator.usernameError(s.username)
+        val passwordError = UserDataValidator.passwordError(s.password)
+        _state.update { it.copy(usernameError = usernameError, passwordError = passwordError) }
+        return usernameError == null && passwordError == null
     }
 }
