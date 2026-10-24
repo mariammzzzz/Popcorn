@@ -1,5 +1,6 @@
-package com.mjapa21.popcorn.presentation.pages
+package com.mjapa21.popcorn.presentation.pages.login
 
+import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,7 +20,7 @@ class LoginViewModel : ViewModel() {
 
     //todo implement properly
     fun validate(): Boolean {
-        val emailValid = android.util.Patterns.EMAIL_ADDRESS.matcher(state.email.trim()).matches()
+        val emailValid = Patterns.EMAIL_ADDRESS.matcher(state.email.trim()).matches()
         val passwordValid = state.password.length >= 6
         state = state.copy(
             emailError = if (emailValid) null else "Enter a valid email address",

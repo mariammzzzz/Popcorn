@@ -1,4 +1,4 @@
-package com.mjapa21.popcorn.presentation.pages
+package com.mjapa21.popcorn.presentation.pages.login
 
 data class LoginUiState(
     val email: String = "",

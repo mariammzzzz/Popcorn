@@ -1,4 +1,4 @@
-package com.mjapa21.popcorn.presentation.pages
+package com.mjapa21.popcorn.presentation.pages.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
