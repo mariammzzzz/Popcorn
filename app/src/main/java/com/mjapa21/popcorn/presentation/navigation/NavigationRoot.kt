@@ -1,5 +1,8 @@
 package com.mjapa21.popcorn.presentation.navigation
 
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
@@ -24,6 +27,15 @@ fun NavigationRoot(modifier: Modifier = Modifier, startDestination: Destination)
         modifier = modifier,
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
+        transitionSpec = {
+            slideInHorizontally { it } togetherWith slideOutHorizontally { -it }
+        },
+        popTransitionSpec = {
+            slideInHorizontally { -it } togetherWith slideOutHorizontally { it }
+        },
+        predictivePopTransitionSpec = {
+            slideInHorizontally { -it } togetherWith slideOutHorizontally { it }
+        }
     ) { navKey ->
         when (navKey) {
             Destination.Login -> NavEntry(navKey) {
