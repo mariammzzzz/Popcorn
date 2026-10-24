@@ -18,7 +18,7 @@ class LoginViewModel : ViewModel() {
     private val _state = MutableStateFlow(LoginState())
     val state: StateFlow<LoginState> = _state.asStateFlow()
 
-    private val eventChannel = Channel<LoginEvent>()
+    private val eventChannel = Channel<LoginEvent>(Channel.BUFFERED)
     val events = eventChannel.receiveAsFlow()
 
     fun onAction(action: LoginAction) {
