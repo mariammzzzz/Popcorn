@@ -69,7 +69,6 @@ fun SignUp(
         onAction = viewModel::onAction,
     )
 }
-
 @Composable
 fun SignUpScreen(
     state: SignUpState,
@@ -88,114 +87,127 @@ fun SignUpScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .windowInsetsPadding(WindowInsets.safeDrawing)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .windowInsetsPadding(WindowInsets.safeDrawing), // status bar + nav bar + keyboard
         ) {
-            Text(
-                text = "Create your account",
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = "Pick a username and password to get started",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-            )
-
-            Spacer(Modifier.height(32.dp))
-
-
-            PopcornTextField(
-                value = state.fullName,
-                onValueChange = { onAction(SignUpAction.OnFullNameChange(it)) },
-                label = "Full name",
-                placeholder = "Jane Doe",
-                errorText = state.fullNameError,
-                enabled = !state.isLoading,
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Words,
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                ),
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Spacer(Modifier.height(20.dp))
-
-            PopcornTextField(
-                value = state.username,
-                onValueChange = { onAction(SignUpAction.OnUsernameChange(it)) },
-                label = "Username",
-                placeholder = "your_username",
-                supportingText = "${UserDataValidator.USERNAME_MIN}–${UserDataValidator.USERNAME_MAX} characters: letters, numbers, underscores",
-                errorText = state.usernameError,
-                enabled = !state.isLoading,
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.None,
-                    autoCorrectEnabled = false,
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                ),
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Spacer(Modifier.height(20.dp))
-
-            PopcornPasswordField(
-                value = state.password,
-                onValueChange = { onAction(SignUpAction.OnPasswordChange(it)) },
-                placeholder = "Create a password",
-                supportingText = "At least ${UserDataValidator.PASSWORD_MIN} characters",
-                errorText = state.passwordError,
-                enabled = !state.isLoading,
-                imeAction = ImeAction.Done,
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        focusManager.clearFocus()
-                        if (state.canSubmit) onAction(SignUpAction.OnSignUpClick)
-                    }
-                ),
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Spacer(Modifier.height(28.dp))
-
-            PopcornButton(
-                text = if (state.isLoading) "Creating account…" else "Sign up",
-                onClick = { onAction(SignUpAction.OnSignUpClick) },
-                enabled = state.canSubmit,
-                loading = state.isLoading,
-                size = PopcornButtonSize.Large,
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Spacer(Modifier.height(16.dp))
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            //THIS IS THE SCROLLABLE PART that takes all the space the bottom section doesn't need
+            //cause it has weight 1 while the bottom section has no weight
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 24.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
                 Text(
-                    text = "Already have an account?",
+                    text = "Create your account",
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = "Pick a username and password to get started",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(end = 8.dp),
+                    textAlign = TextAlign.Center,
                 )
-                PopcornButton(
-                    text = "Log in",
-                    onClick = { onAction(SignUpAction.OnLoginClick) },
-                    style = PopcornButtonStyle.Text,
-                    size = PopcornButtonSize.Small,
+
+                Spacer(Modifier.height(32.dp))
+
+                PopcornTextField(
+                    value = state.fullName,
+                    onValueChange = { onAction(SignUpAction.OnFullNameChange(it)) },
+                    label = "Full name",
+                    placeholder = "Jane Doe",
+                    errorText = state.fullNameError,
                     enabled = !state.isLoading,
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Words,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
                 )
+
+                Spacer(Modifier.height(20.dp))
+
+                PopcornTextField(
+                    value = state.username,
+                    onValueChange = { onAction(SignUpAction.OnUsernameChange(it)) },
+                    label = "Username",
+                    placeholder = "your_username",
+                    supportingText = "${UserDataValidator.USERNAME_MIN}–${UserDataValidator.USERNAME_MAX} characters: letters, numbers, underscores",
+                    errorText = state.usernameError,
+                    enabled = !state.isLoading,
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.None,
+                        autoCorrectEnabled = false,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                Spacer(Modifier.height(20.dp))
+
+                PopcornPasswordField(
+                    value = state.password,
+                    onValueChange = { onAction(SignUpAction.OnPasswordChange(it)) },
+                    placeholder = "Create a password",
+                    supportingText = "At least ${UserDataValidator.PASSWORD_MIN} characters, no spaces",
+                    errorText = state.passwordError,
+                    enabled = !state.isLoading,
+                    imeAction = ImeAction.Done,
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus()
+                            if (state.canSubmit) onAction(SignUpAction.OnSignUpClick)
+                        }
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
+            // THIS IS PINNED SECTION: always visible and always on top of the keyboard
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp, vertical = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                PopcornButton(
+                    text = if (state.isLoading) "Creating account…" else "Sign up",
+                    onClick = { onAction(SignUpAction.OnSignUpClick) },
+                    enabled = state.canSubmit,
+                    loading = state.isLoading,
+                    size = PopcornButtonSize.Large,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Already have an account?",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(end = 8.dp),
+                    )
+                    PopcornButton(
+                        text = "Log in",
+                        onClick = { onAction(SignUpAction.OnLoginClick) },
+                        style = PopcornButtonStyle.Text,
+                        size = PopcornButtonSize.Small,
+                        enabled = !state.isLoading,
+                    )
+                }
             }
         }
     }

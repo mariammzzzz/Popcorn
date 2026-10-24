@@ -77,7 +77,6 @@ fun LoginScreen(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val focusManager = LocalFocusManager.current
-
     Scaffold(
         modifier = modifier,
         contentWindowInsets = WindowInsets(0),
@@ -87,91 +86,104 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .windowInsetsPadding(WindowInsets.safeDrawing)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .windowInsetsPadding(WindowInsets.safeDrawing), // status bar + nav bar + keyboard
         ) {
-            Text(
-                text = "Welcome back",
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = "Log in to continue to Popcorn",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-            )
-
-            Spacer(Modifier.height(32.dp))
-
-            PopcornTextField(
-                value = state.username,
-                onValueChange = { onAction(LoginAction.OnUsernameChange(it)) },
-                label = "Username",
-                placeholder = "your_username",
-                errorText = state.usernameError,
-                enabled = !state.isLoading,
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.None,
-                    autoCorrectEnabled = false,
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                ),
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Spacer(Modifier.height(20.dp))
-
-            PopcornPasswordField(
-                value = state.password,
-                onValueChange = { onAction(LoginAction.OnPasswordChange(it)) },
-                placeholder = "Enter your password",
-                errorText = state.passwordError,
-                enabled = !state.isLoading,
-                imeAction = ImeAction.Done,
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        focusManager.clearFocus()
-                        if (state.canSubmit) onAction(LoginAction.OnLoginClick)
-                    }
-                ),
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Spacer(Modifier.height(28.dp))
-
-            PopcornButton(
-                text = if (state.isLoading) "Signing in…" else "Log in",
-                onClick = { onAction(LoginAction.OnLoginClick) },
-                enabled = state.canSubmit,
-                loading = state.isLoading,
-                size = PopcornButtonSize.Large,
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Spacer(Modifier.height(16.dp))
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            //THIS IS THE SCROLLABLE PART OF THE LOGIN SCREEN
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 24.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
                 Text(
-                    text = "Don't have an account?",
+                    text = "Welcome back",
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = "Log in to continue to Popcorn",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(end = 8.dp),
+                    textAlign = TextAlign.Center,
                 )
-                PopcornButton(
-                    text = "Sign up",
-                    onClick = { onAction(LoginAction.OnSignUpClick) },
-                    style = PopcornButtonStyle.Text,
-                    size = PopcornButtonSize.Small,
+
+                Spacer(Modifier.height(32.dp))
+
+                PopcornTextField(
+                    value = state.username,
+                    onValueChange = { onAction(LoginAction.OnUsernameChange(it)) },
+                    label = "Username",
+                    placeholder = "your_username",
+                    errorText = state.usernameError,
                     enabled = !state.isLoading,
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.None,
+                        autoCorrectEnabled = false,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
                 )
+
+                Spacer(Modifier.height(20.dp))
+
+                PopcornPasswordField(
+                    value = state.password,
+                    onValueChange = { onAction(LoginAction.OnPasswordChange(it)) },
+                    placeholder = "Enter your password",
+                    errorText = state.passwordError,
+                    enabled = !state.isLoading,
+                    imeAction = ImeAction.Done,
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            focusManager.clearFocus()
+                            if (state.canSubmit) onAction(LoginAction.OnLoginClick)
+                        }
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
+            //THIS IS THE PINNED SECTION THAT IS ALWAYS PINNED ON THE KEYBOARD
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp, vertical = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                PopcornButton(
+                    text = if (state.isLoading) "Signing in…" else "Log in",
+                    onClick = { onAction(LoginAction.OnLoginClick) },
+                    enabled = state.canSubmit,
+                    loading = state.isLoading,
+                    size = PopcornButtonSize.Large,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Don't have an account?",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(end = 8.dp),
+                    )
+                    PopcornButton(
+                        text = "Sign up",
+                        onClick = { onAction(LoginAction.OnSignUpClick) },
+                        style = PopcornButtonStyle.Text,
+                        size = PopcornButtonSize.Small,
+                        enabled = !state.isLoading,
+                    )
+                }
             }
         }
     }
