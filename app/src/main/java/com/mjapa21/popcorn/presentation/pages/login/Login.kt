@@ -35,19 +35,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mjapa21.design_system.components.PopcornButton
 import com.mjapa21.design_system.components.PopcornButtonSize
 import com.mjapa21.design_system.components.PopcornButtonStyle
 import com.mjapa21.design_system.components.PopcornPasswordField
 import com.mjapa21.design_system.components.PopcornTextField
 import com.mjapa21.design_system.theme.PopcornTheme
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun Login(
     onLoginSuccess: () -> Unit,
     onSignUpClick: () -> Unit,
-    viewModel: LoginViewModel = viewModel(),
+    viewModel: LoginViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
