@@ -61,7 +61,7 @@ class SignUpViewModel(
             signUpUseCase(email, current.password)
                 .onSuccess {
                     if (firebaseAuth.currentUser != null) {
-                        eventChannel.send(SignUpEvent.NavigateToHome) //todo check this later
+                        eventChannel.send(SignUpEvent.NavigateToHome)
                     } else {
                         eventChannel.send(SignUpEvent.NavigateToLogin)
                     }
