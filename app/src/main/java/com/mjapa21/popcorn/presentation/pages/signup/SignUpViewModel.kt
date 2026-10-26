@@ -2,10 +2,9 @@ package com.mjapa21.popcorn.presentation.pages.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mjapa21.popcorn.domain.usecase.SignUpUseCase
 import com.mjapa21.popcorn.domain.validation.UserDataValidator
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +12,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class SignUpViewModel : ViewModel() {
+class SignUpViewModel(private val signUpUseCase: SignUpUseCase) : ViewModel() {
 
     private val _state = MutableStateFlow(SignUpState())
     val state: StateFlow<SignUpState> = _state.asStateFlow()
@@ -55,20 +54,15 @@ class SignUpViewModel : ViewModel() {
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            try {
-                // TODO: real sign-up call with `email` + current.password.
-                // If the backend says the email exists, show it on the field:
-                //   _state.update { it.copy(emailError = "Email is already in use") }
-                //   return@launch   (the finally block still resets isLoading)
-                delay(1_500)
-                eventChannel.send(SignUpEvent.NavigateToHome)
-            } catch (e: CancellationException) {
-                throw e // never swallow cancellation
-            } catch (e: Exception) {
-                eventChannel.send(SignUpEvent.ShowError(e.message ?: "Something went wrong"))
-            } finally {
-                _state.update { it.copy(isLoading = false) }
-            }
+            signUpUseCase(email, current.password)
+                .onSuccess {
+                    eventChannel.send(SignUpEvent.NavigateToLogin) //todo check this later
+                }
+                .onFailure {
+                    eventChannel.send(SignUpEvent.ShowError(it.message ?: "Unknown error"))
+                }
+
+            _state.update { it.copy(isLoading = false) }
         }
     }
 

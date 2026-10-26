@@ -2,10 +2,9 @@ package com.mjapa21.popcorn.presentation.pages.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mjapa21.popcorn.domain.usecase.LoginUseCase
 import com.mjapa21.popcorn.domain.validation.UserDataValidator
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +12,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
     val state: StateFlow<LoginState> = _state.asStateFlow()
@@ -54,17 +53,19 @@ class LoginViewModel : ViewModel() {
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            try {
-                // TODO: real auth call with `username` + current.password
-                delay(1_500)
-                eventChannel.send(LoginEvent.NavigateToHome)
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                eventChannel.send(LoginEvent.ShowError("Invalid username or password"))
-            } finally {
-                _state.update { it.copy(isLoading = false) }
+            loginUseCase(email, current.password).apply {
+                onSuccess {
+                    eventChannel.send(LoginEvent.NavigateToHome)
+                }
+                onFailure {
+                    eventChannel.send(
+                        LoginEvent.ShowError(
+                            it.message ?: "Unknown error"
+                        )
+                    ) //todo maybe use hardcoded error message not to expose internal error messages to the user
+                }
             }
+            _state.update { it.copy(isLoading = false) }
         }
     }
 

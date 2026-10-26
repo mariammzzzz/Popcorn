@@ -1,0 +1,11 @@
+package com.mjapa21.popcorn.di
+
+import com.mjapa21.popcorn.domain.usecase.LoginUseCase
+import com.mjapa21.popcorn.domain.usecase.SignUpUseCase
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.module
+
+val useCasesModule = module {
+    factoryOf(::LoginUseCase)
+    factoryOf(::SignUpUseCase)
+}
