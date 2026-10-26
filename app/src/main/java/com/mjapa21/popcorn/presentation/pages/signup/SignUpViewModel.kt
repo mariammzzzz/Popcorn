@@ -2,6 +2,7 @@ package com.mjapa21.popcorn.presentation.pages.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.mjapa21.popcorn.domain.usecase.SignUpUseCase
 import com.mjapa21.popcorn.domain.validation.UserDataValidator
 import kotlinx.coroutines.channels.Channel
@@ -12,7 +13,10 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class SignUpViewModel(private val signUpUseCase: SignUpUseCase) : ViewModel() {
+class SignUpViewModel(
+    private val signUpUseCase: SignUpUseCase,
+    private val firebaseAuth: FirebaseAuth
+) : ViewModel() {
 
     private val _state = MutableStateFlow(SignUpState())
     val state: StateFlow<SignUpState> = _state.asStateFlow()
@@ -56,7 +60,11 @@ class SignUpViewModel(private val signUpUseCase: SignUpUseCase) : ViewModel() {
             _state.update { it.copy(isLoading = true) }
             signUpUseCase(email, current.password)
                 .onSuccess {
-                    eventChannel.send(SignUpEvent.NavigateToLogin) //todo check this later
+                    if (firebaseAuth.currentUser != null) {
+                        eventChannel.send(SignUpEvent.NavigateToHome) //todo check this later
+                    } else {
+                        eventChannel.send(SignUpEvent.NavigateToLogin)
+                    }
                 }
                 .onFailure {
                     eventChannel.send(SignUpEvent.ShowError(it.message ?: "Unknown error"))
