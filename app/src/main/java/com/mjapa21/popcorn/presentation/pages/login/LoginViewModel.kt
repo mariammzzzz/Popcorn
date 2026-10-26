@@ -23,11 +23,21 @@ class LoginViewModel : ViewModel() {
 
     fun onAction(action: LoginAction) {
         when (action) {
-            is LoginAction.OnUsernameChange ->
-                _state.update { it.copy(username = action.username, usernameError = null) }
+            is LoginAction.OnEmailChange ->
+                _state.update {
+                    it.copy(
+                        email = UserDataValidator.sanitizeEmail(action.email),
+                        emailError = null
+                    )
+                }
 
             is LoginAction.OnPasswordChange ->
-                _state.update { it.copy(password = action.password, passwordError = null) }
+                _state.update {
+                    it.copy(
+                        password = UserDataValidator.sanitizePassword(action.password),
+                        passwordError = null
+                    )
+                }
 
             LoginAction.OnLoginClick -> login()
 
@@ -40,7 +50,7 @@ class LoginViewModel : ViewModel() {
         val current = _state.value
         if (current.isLoading || !current.canSubmit || !validate()) return
 
-        val username = UserDataValidator.normalizeUsername(current.username)
+        val email = UserDataValidator.normalizeEmail(current.email)
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
@@ -60,9 +70,9 @@ class LoginViewModel : ViewModel() {
 
     private fun validate(): Boolean {
         val s = _state.value
-        val usernameError = UserDataValidator.usernameError(s.username)
+        val emailError = UserDataValidator.emailError(s.email)
         val passwordError = UserDataValidator.passwordError(s.password)
-        _state.update { it.copy(usernameError = usernameError, passwordError = passwordError) }
-        return usernameError == null && passwordError == null
+        _state.update { it.copy(emailError = emailError, passwordError = passwordError) }
+        return emailError == null && passwordError == null
     }
 }

@@ -24,15 +24,21 @@ class SignUpViewModel : ViewModel() {
 
     fun onAction(action: SignUpAction) {
         when (action) {
-
-            is SignUpAction.OnFullNameChange ->
-                _state.update { it.copy(fullName = action.fullName, fullNameError = null) }
-
-            is SignUpAction.OnUsernameChange ->
-                _state.update { it.copy(username = action.username, usernameError = null) }
+            is SignUpAction.OnEmailChange ->
+                _state.update {
+                    it.copy(
+                        email = UserDataValidator.sanitizeEmail(action.email),
+                        emailError = null,
+                    )
+                }
 
             is SignUpAction.OnPasswordChange ->
-                _state.update { it.copy(password = action.password, passwordError = null) }
+                _state.update {
+                    it.copy(
+                        password = UserDataValidator.sanitizePassword(action.password),
+                        passwordError = null,
+                    )
+                }
 
             SignUpAction.OnSignUpClick -> signUp()
 
@@ -45,15 +51,14 @@ class SignUpViewModel : ViewModel() {
         val current = _state.value
         if (current.isLoading || !validate()) return
 
-        val fullName = UserDataValidator.normalizeFullName(current.fullName)
-        val username = UserDataValidator.normalizeUsername(current.username)
+        val email = UserDataValidator.normalizeEmail(current.email)
 
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             try {
-                // TODO: real sign-up call with `username` + current.password.
-                // If the backend says the username exists, show it on the field:
-                //   _state.update { it.copy(usernameError = "Username is already taken") }
+                // TODO: real sign-up call with `email` + current.password.
+                // If the backend says the email exists, show it on the field:
+                //   _state.update { it.copy(emailError = "Email is already in use") }
                 //   return@launch   (the finally block still resets isLoading)
                 delay(1_500)
                 eventChannel.send(SignUpEvent.NavigateToHome)
@@ -69,16 +74,9 @@ class SignUpViewModel : ViewModel() {
 
     private fun validate(): Boolean {
         val s = _state.value
-        val fullNameError = UserDataValidator.fullNameError(s.fullName)
-        val usernameError = UserDataValidator.usernameError(s.username)
+        val emailError = UserDataValidator.emailError(s.email)
         val passwordError = UserDataValidator.passwordError(s.password)
-        _state.update {
-            it.copy(
-                fullNameError = fullNameError,
-                usernameError = usernameError,
-                passwordError = passwordError,
-            )
-        }
-        return fullNameError == null && usernameError == null && passwordError == null
+        _state.update { it.copy(emailError = emailError, passwordError = passwordError) }
+        return emailError == null && passwordError == null
     }
 }

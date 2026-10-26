@@ -114,16 +114,16 @@ fun LoginScreen(
                 Spacer(Modifier.height(32.dp))
 
                 PopcornTextField(
-                    value = state.username,
-                    onValueChange = { onAction(LoginAction.OnUsernameChange(it)) },
-                    label = "Username",
-                    placeholder = "your_username",
-                    errorText = state.usernameError,
+                    value = state.email,
+                    onValueChange = { onAction(LoginAction.OnEmailChange(it)) },
+                    label = "Email",
+                    placeholder = "you@example.com",
+                    errorText = state.emailError,
                     enabled = !state.isLoading,
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
                         autoCorrectEnabled = false,
-                        keyboardType = KeyboardType.Text,
+                        keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next,
                     ),
                     keyboardActions = KeyboardActions(
@@ -193,7 +193,7 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenDarkPreview() = PopcornTheme(darkTheme = true) {
     LoginScreen(
-        state = LoginState(username = "mjapa21", password = "secret123"),
+        state = LoginState(email = "mjapa21@example.com", password = "secret123"),
         onAction = {},
     )
 }
@@ -202,7 +202,7 @@ private fun LoginScreenDarkPreview() = PopcornTheme(darkTheme = true) {
 @Composable
 private fun LoginScreenLightPreview() = PopcornTheme(darkTheme = false) {
     LoginScreen(
-        state = LoginState(username = "mjapa21", usernameError = "Username not found"),
+        state = LoginState(email = "mjapa21@example.com", emailError = "Invalid email"),
         onAction = {},
     )
 }

@@ -69,6 +69,7 @@ fun SignUp(
         onAction = viewModel::onAction,
     )
 }
+
 @Composable
 fun SignUpScreen(
     state: SignUpState,
@@ -107,7 +108,7 @@ fun SignUpScreen(
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    text = "Pick a username and password to get started",
+                    text = "Enter your email and a password to get started",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
@@ -116,37 +117,16 @@ fun SignUpScreen(
                 Spacer(Modifier.height(32.dp))
 
                 PopcornTextField(
-                    value = state.fullName,
-                    onValueChange = { onAction(SignUpAction.OnFullNameChange(it)) },
-                    label = "Full name",
-                    placeholder = "Jane Doe",
-                    errorText = state.fullNameError,
-                    enabled = !state.isLoading,
-                    keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.Words,
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next,
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                    ),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                Spacer(Modifier.height(20.dp))
-
-                PopcornTextField(
-                    value = state.username,
-                    onValueChange = { onAction(SignUpAction.OnUsernameChange(it)) },
-                    label = "Username",
-                    placeholder = "your_username",
-                    supportingText = "${UserDataValidator.USERNAME_MIN}–${UserDataValidator.USERNAME_MAX} characters: letters, numbers, underscores",
-                    errorText = state.usernameError,
+                    value = state.email,
+                    onValueChange = { onAction(SignUpAction.OnEmailChange(it)) },
+                    label = "Email",
+                    placeholder = "you@example.com",
+                    errorText = state.emailError,
                     enabled = !state.isLoading,
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
                         autoCorrectEnabled = false,
-                        keyboardType = KeyboardType.Text,
+                        keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next,
                     ),
                     keyboardActions = KeyboardActions(
@@ -217,7 +197,7 @@ fun SignUpScreen(
 @Composable
 private fun SignUpScreenDarkPreview() = PopcornTheme(darkTheme = true) {
     SignUpScreen(
-        state = SignUpState(username = "mjapa21", password = "secret1234"),
+        state = SignUpState(email = "mjapa21@example.com", password = "secret1234"),
         onAction = {},
     )
 }
@@ -226,11 +206,7 @@ private fun SignUpScreenDarkPreview() = PopcornTheme(darkTheme = true) {
 @Composable
 private fun SignUpScreenLightPreview() = PopcornTheme(darkTheme = false) {
     SignUpScreen(
-        state = SignUpState(
-            username = "mj",
-            usernameError = "Username is already taken",
-            fullName = "Mariam Japara"
-        ),
+        state = SignUpState(email = "mj@", emailError = "Enter a valid email address"),
         onAction = {},
     )
 }
