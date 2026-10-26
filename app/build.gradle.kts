@@ -74,6 +74,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-navigation3:2.11.0")
 
 
+    //retrofit for network calls
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0") //gson converter
+
+
+
     //my own design system module
     implementation(project(":design-system"))
 

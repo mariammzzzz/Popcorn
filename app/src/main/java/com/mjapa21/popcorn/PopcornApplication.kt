@@ -2,6 +2,7 @@ package com.mjapa21.popcorn
 
 import android.app.Application
 import com.mjapa21.popcorn.di.firebaseModule
+import com.mjapa21.popcorn.di.networkModule
 import com.mjapa21.popcorn.di.repositoryModule
 import com.mjapa21.popcorn.di.useCasesModule
 import com.mjapa21.popcorn.di.viewModelsModule
@@ -17,7 +18,8 @@ class PopcornApplication : Application() {
                 viewModelsModule,
                 repositoryModule,
                 firebaseModule,
-                useCasesModule
+                useCasesModule,
+                networkModule
             )
         }
     }

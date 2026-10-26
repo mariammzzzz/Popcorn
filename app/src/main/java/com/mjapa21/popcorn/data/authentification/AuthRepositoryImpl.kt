@@ -1,4 +1,4 @@
-package com.mjapa21.popcorn.data
+package com.mjapa21.popcorn.data.authentification
 
 import com.google.firebase.auth.FirebaseAuth
 import com.mjapa21.popcorn.domain.repository.AuthRepository
@@ -19,8 +19,8 @@ class AuthRepositoryImpl(private val firebaseAuth: FirebaseAuth) : AuthRepositor
             }
         }
 
-        //found out that this does nothing since the coroutine is already cancelled and we kinda try to cancel it again
-        //we would free up the resources here for example we would stop the firebase request if it was cancellable but that task is not cancellable once it's fired
+////        found out that this does nothing since the coroutine is already cancelled and we kinda try to cancel it again
+////        we would free up the resources here for example we would stop the firebase request if it was cancellable but that task is not cancellable once it's fired
 //        continuation.invokeOnCancellation {
 //            continuation.cancel()
 //        }
