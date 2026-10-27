@@ -1,4 +1,4 @@
-package com.mjapa21.popcorn.data.authentification
+package com.mjapa21.popcorn.data.authentication
 
 import com.google.firebase.auth.FirebaseAuth
 import com.mjapa21.popcorn.domain.repository.AuthRepository
