@@ -15,4 +15,7 @@ sealed interface Destination : NavKey {
     @Serializable
     data object Home : Destination
 
+
+    @Serializable
+    data class Details(val imdbId: String) : Destination
 }

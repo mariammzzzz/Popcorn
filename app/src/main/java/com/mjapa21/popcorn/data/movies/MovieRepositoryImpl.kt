@@ -1,6 +1,7 @@
 package com.mjapa21.popcorn.data.movies
 
 import com.mjapa21.popcorn.data.mapper.toDomain
+import com.mjapa21.popcorn.domain.model.MovieDetails
 import com.mjapa21.popcorn.domain.model.MovieSearchResult
 import com.mjapa21.popcorn.domain.repository.MovieRepository
 import kotlinx.coroutines.CancellationException
@@ -20,4 +21,20 @@ class MovieRepositoryImpl(private val movieApi: MovieApi) : MovieRepository {
             Result.failure(Exception("Couldn't fetch a movie"))
         }
     }
+
+    override suspend fun getMovieDetails(id: String): Result<MovieDetails> {
+        return try {
+            val response = movieApi.getMovieDetails(id)
+            if (response.response == "True") {
+                Result.success(response.toDomain())
+            } else {
+                Result.failure(Exception(response.error ?: "Unknown error"))
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 }

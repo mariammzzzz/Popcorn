@@ -1,4 +1,4 @@
-package com.mjapa21.popcorn.presentation.details
+package com.mjapa21.popcorn.presentation.pages.details
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,11 +19,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mjapa21.design_system.components.PopcornButton
 import com.mjapa21.design_system.components.PopcornButtonStyle
 import com.mjapa21.design_system.components.PopcornErrorState
@@ -38,22 +40,25 @@ import com.mjapa21.popcorn.domain.model.MediaType
 import com.mjapa21.popcorn.domain.model.MovieDetails
 import com.mjapa21.popcorn.domain.model.Rating
 import com.mjapa21.popcorn.domain.model.WatchStatus
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import com.mjapa21.design_system.R as DesignSystemR
 import com.mjapa21.popcorn.R as AppR
 
-//@Composable
-//fun DetailsRoot(
-//    imdbId: String,
-//    onBack: () -> Unit,
-//    viewModel: DetailsViewModel = koinViewModel(parameters = { parametersOf(imdbId) }),
-//) {
-//    val state by viewModel.state.collectAsStateWithLifecycle()
-//    DetailsScreen(
-//        state = state,
-//        onAction = viewModel::onAction,
-//        onBack = onBack,
-//    )
-//}
+
+@Composable
+fun Details(
+    imdbId: String,
+    onBack: () -> Unit,
+    viewModel: DetailsViewModel = koinViewModel(parameters = { parametersOf(imdbId) }),
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    DetailsScreen(
+        state = state,
+        onAction = viewModel::onAction,
+        onBack = onBack,
+    )
+}
 
 @Composable
 fun DetailsScreen(

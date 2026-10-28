@@ -1,5 +1,6 @@
 package com.mjapa21.popcorn.di
 
+import com.mjapa21.popcorn.domain.usecase.GetMovieDetailsUseCase
 import com.mjapa21.popcorn.domain.usecase.LoginUseCase
 import com.mjapa21.popcorn.domain.usecase.SearchMoviesUseCase
 import com.mjapa21.popcorn.domain.usecase.SignUpUseCase
@@ -10,4 +11,5 @@ val useCasesModule = module {
     factoryOf(::LoginUseCase)
     factoryOf(::SignUpUseCase)
     factoryOf(::SearchMoviesUseCase)
+    factoryOf(::GetMovieDetailsUseCase)
 }

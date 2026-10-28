@@ -44,7 +44,7 @@ fun PopcornInfoListPreview() {
             "Release Date" to "2023-06-01",
             "Runtime" to "120 min",
             "Director" to "John Doe",
-            "Genre" to null,
+            "Genre" to null, // This item will be filtered out and not displayed
         )
     )
 }

@@ -1,4 +1,4 @@
-package com.mjapa21.popcorn.presentation.details
+package com.mjapa21.popcorn.presentation.pages.details
 
 import com.mjapa21.popcorn.domain.model.MovieDetails
 import com.mjapa21.popcorn.domain.model.WatchStatus
