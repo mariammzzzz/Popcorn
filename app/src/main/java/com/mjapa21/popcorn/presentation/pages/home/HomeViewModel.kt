@@ -2,19 +2,38 @@ package com.mjapa21.popcorn.presentation.pages.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mjapa21.popcorn.domain.usecase.SearchMoviesUseCase
+import com.mjapa21.popcorn.domain.model.WatchStatus
+import com.mjapa21.popcorn.domain.usecase.library.ObserveLibraryUseCase
+import com.mjapa21.popcorn.domain.usecase.movie.SearchMoviesUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val searchMovies: SearchMoviesUseCase) : ViewModel() {
+class HomeViewModel(
+    private val searchMovies: SearchMoviesUseCase,
+    private val observeLibrary: ObserveLibraryUseCase,
+) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
 
     private var searchJob: Job? = null
+
+
+    init {
+        viewModelScope.launch {
+            observeLibrary().collect { library ->
+                _state.update {
+                    it.copy(
+                        watchlist = library.filter { m -> m.status == WatchStatus.WATCHLIST },
+                        watched = library.filter { m -> m.status == WatchStatus.WATCHED },
+                    )
+                }
+            }
+        }
+    }
 
     fun onIntent(intent: HomeAction) {
         when (intent) {

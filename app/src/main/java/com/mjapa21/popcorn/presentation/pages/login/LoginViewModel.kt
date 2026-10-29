@@ -2,7 +2,7 @@ package com.mjapa21.popcorn.presentation.pages.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mjapa21.popcorn.domain.usecase.LoginUseCase
+import com.mjapa21.popcorn.domain.usecase.authetication.LoginUseCase
 import com.mjapa21.popcorn.domain.validation.UserDataValidator
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

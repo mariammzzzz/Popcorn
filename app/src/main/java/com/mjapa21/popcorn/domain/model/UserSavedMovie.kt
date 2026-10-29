@@ -9,4 +9,5 @@ data class SavedMovie(
     val posterUrl: String?,
     val type: MediaType,
     val status: WatchStatus,
+    val addedAt: Long,
 )

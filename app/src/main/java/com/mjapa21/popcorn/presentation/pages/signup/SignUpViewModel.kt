@@ -3,7 +3,7 @@ package com.mjapa21.popcorn.presentation.pages.signup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.mjapa21.popcorn.domain.usecase.SignUpUseCase
+import com.mjapa21.popcorn.domain.usecase.authetication.SignUpUseCase
 import com.mjapa21.popcorn.domain.validation.UserDataValidator
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

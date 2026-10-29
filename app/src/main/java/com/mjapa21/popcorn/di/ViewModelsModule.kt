@@ -12,5 +12,14 @@ val viewModelsModule = module {
     viewModelOf(::LoginViewModel)
     viewModelOf(::SignUpViewModel)
     viewModelOf(::HomeViewModel)
-    viewModel { (imdbId: String) -> DetailsViewModel(imdbId = imdbId, getMovieDetails = get()) }
+    viewModel { (imdbId: String) ->
+        DetailsViewModel(
+            imdbId = imdbId,
+            get(),
+            get(),
+            get(),
+            get(),
+            get()
+        )
+    }
 }

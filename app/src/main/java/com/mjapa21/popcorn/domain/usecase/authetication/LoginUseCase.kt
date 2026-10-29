@@ -1,4 +1,4 @@
-package com.mjapa21.popcorn.domain.usecase
+package com.mjapa21.popcorn.domain.usecase.authetication
 
 import com.mjapa21.popcorn.domain.repository.AuthRepository
 

@@ -1,4 +1,4 @@
-package com.mjapa21.popcorn.domain.usecase
+package com.mjapa21.popcorn.domain.usecase.movie
 
 import com.mjapa21.popcorn.domain.model.MovieSearchResult
 import com.mjapa21.popcorn.domain.repository.MovieRepository
