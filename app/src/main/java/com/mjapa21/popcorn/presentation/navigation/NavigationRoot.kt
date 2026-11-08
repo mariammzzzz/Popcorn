@@ -64,11 +64,15 @@ fun NavigationRoot(modifier: Modifier = Modifier, startDestination: Destination)
                 }
 
                 Destination.Home -> NavEntry(navKey) {
-                    Home(onMovieClick = { imdbId ->
-                        backStack.add(
-                            Destination.Details(imdbId)
-                        )
-                    })
+                    Home(
+                        onMovieClick = { imdbId ->
+                            backStack.add(
+                                Destination.Details(imdbId)
+                            )
+                        },
+                        onSignedOut = {
+                            navigateAsRoot(Destination.Login)
+                        })
                 }
 
                 is Destination.Details -> NavEntry(navKey) {

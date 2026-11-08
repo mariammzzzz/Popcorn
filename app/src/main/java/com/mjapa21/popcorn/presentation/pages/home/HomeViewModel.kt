@@ -3,21 +3,28 @@ package com.mjapa21.popcorn.presentation.pages.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mjapa21.popcorn.domain.model.WatchStatus
+import com.mjapa21.popcorn.domain.usecase.authetication.SignOutUseCase
 import com.mjapa21.popcorn.domain.usecase.library.ObserveLibraryUseCase
 import com.mjapa21.popcorn.domain.usecase.movie.SearchMoviesUseCase
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val searchMovies: SearchMoviesUseCase,
     private val observeLibrary: ObserveLibraryUseCase,
+    private val signOut: SignOutUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
+
+    private val _events = Channel<HomeEvent>()
+    val events = _events.receiveAsFlow()
 
     private var searchJob: Job? = null
 
@@ -39,6 +46,7 @@ class HomeViewModel(
         when (intent) {
             is HomeAction.QueryChanged -> onQueryChanged(intent.query)
             HomeAction.Search -> search()
+            HomeAction.SignOut -> onSignOut()
         }
     }
 
@@ -71,5 +79,10 @@ class HomeViewModel(
                     }
                 }
         }
+    }
+
+    private fun onSignOut() {
+        signOut()
+        viewModelScope.launch { _events.send(HomeEvent.SignedOut) }
     }
 }

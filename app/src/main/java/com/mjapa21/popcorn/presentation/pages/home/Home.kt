@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -17,11 +19,15 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mjapa21.design_system.components.PopcornButton
 import com.mjapa21.design_system.components.PopcornEmptyState
 import com.mjapa21.design_system.components.PopcornMovieListItem
 import com.mjapa21.design_system.components.PopcornPosterCard
@@ -34,8 +40,19 @@ import org.koin.compose.viewmodel.koinViewModel
 fun Home(
     viewModel: HomeViewModel = koinViewModel(),
     onMovieClick: (String) -> Unit = {},
+    onSignedOut: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val currentOnSignedOut by rememberUpdatedState(onSignedOut) //todo check this later
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                HomeEvent.SignedOut -> currentOnSignedOut()
+            }
+        }
+    }
+
     HomeContent(state, viewModel::onIntent, onMovieClick)
 }
 
@@ -51,11 +68,20 @@ fun HomeContent(
             .statusBarsPadding()
             .padding(top = 16.dp),
     ) {
-        Text(
-            text = "What are we watching?",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(horizontal = 20.dp),
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                text = "What are we watching?",
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.weight(1f),
+            )
+            PopcornButton(onClick = { onIntent(HomeAction.SignOut) }, text = "Sign out")
+        }
         Spacer(Modifier.height(16.dp))
         PopcornSearchBar(
             query = state.query,
@@ -172,4 +198,22 @@ private fun SearchContent(state: HomeState, onMovieClick: (String) -> Unit) {
             }
         }
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+private fun HomeContentPreview() {
+    HomeContent(
+        state = HomeState(
+            query = "Inception",
+            isLoading = false,
+            results = listOf(),
+            error = null,
+            watchlist = listOf(),
+            watched = listOf(),
+        ),
+        onIntent = {},
+        onMovieClick = {},
+    )
 }

@@ -2,6 +2,7 @@ package com.mjapa21.popcorn.di
 
 import com.mjapa21.popcorn.domain.usecase.authetication.IsUserLoggedInUseCase
 import com.mjapa21.popcorn.domain.usecase.authetication.LoginUseCase
+import com.mjapa21.popcorn.domain.usecase.authetication.SignOutUseCase
 import com.mjapa21.popcorn.domain.usecase.authetication.SignUpUseCase
 import com.mjapa21.popcorn.domain.usecase.library.ObserveLibraryUseCase
 import com.mjapa21.popcorn.domain.usecase.library.RemoveMovieUseCase
@@ -15,6 +16,8 @@ import org.koin.dsl.module
 val useCasesModule = module {
     factoryOf(::LoginUseCase)
     factoryOf(::SignUpUseCase)
+    factoryOf(::IsUserLoggedInUseCase)
+    factoryOf(::SignOutUseCase)
 
     factoryOf(::SearchMoviesUseCase)
     factoryOf(::GetMovieDetailsUseCase)
@@ -23,5 +26,4 @@ val useCasesModule = module {
     factoryOf(::SaveMovieUseCase)
     factoryOf(::UpdateMovieStatusUseCase)
     factoryOf(::RemoveMovieUseCase)
-    factoryOf(::IsUserLoggedInUseCase)
 }

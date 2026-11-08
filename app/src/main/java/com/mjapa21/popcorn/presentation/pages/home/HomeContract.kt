@@ -17,4 +17,9 @@ data class HomeState(
 sealed interface HomeAction {
     data class QueryChanged(val query: String) : HomeAction
     data object Search : HomeAction
+    data object SignOut : HomeAction
+}
+
+sealed interface HomeEvent {
+    data object SignedOut : HomeEvent
 }
