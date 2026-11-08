@@ -1,7 +1,7 @@
 package com.mjapa21.popcorn.presentation
 
 import androidx.lifecycle.ViewModel
-import com.mjapa21.popcorn.domain.repository.AuthRepository
+import com.mjapa21.popcorn.domain.usecase.authetication.IsUserLoggedInUseCase
 import com.mjapa21.popcorn.presentation.navigation.Destination
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +11,7 @@ data class MainState(
 )
 
 class MainViewModel(
-    authRepository: AuthRepository
+    isUserLoggedIn: IsUserLoggedInUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MainState())
@@ -19,7 +19,7 @@ class MainViewModel(
 
     init {
         _state.value = MainState(
-            startDestination = if (authRepository.isLoggedIn()) Destination.Home else Destination.Login
+            startDestination = if (isUserLoggedIn()) Destination.Home else Destination.Login
         )
     }
 }

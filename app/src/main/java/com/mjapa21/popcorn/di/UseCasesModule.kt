@@ -1,5 +1,6 @@
 package com.mjapa21.popcorn.di
 
+import com.mjapa21.popcorn.domain.usecase.authetication.IsUserLoggedInUseCase
 import com.mjapa21.popcorn.domain.usecase.authetication.LoginUseCase
 import com.mjapa21.popcorn.domain.usecase.authetication.SignUpUseCase
 import com.mjapa21.popcorn.domain.usecase.library.ObserveLibraryUseCase
@@ -22,4 +23,5 @@ val useCasesModule = module {
     factoryOf(::SaveMovieUseCase)
     factoryOf(::UpdateMovieStatusUseCase)
     factoryOf(::RemoveMovieUseCase)
+    factoryOf(::IsUserLoggedInUseCase)
 }
