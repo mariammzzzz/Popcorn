@@ -81,8 +81,10 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:3.0.0") //gson converter
 
 
-
     //my own design system module
     implementation(project(":design-system"))
 
+    //Splash screen to decide where to land on launch;
+    // home or login screen before we get the status of authentication
+    implementation("androidx.core:core-splashscreen:1.0.0")
 }

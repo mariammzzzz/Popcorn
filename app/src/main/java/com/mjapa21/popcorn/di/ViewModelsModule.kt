@@ -1,5 +1,6 @@
 package com.mjapa21.popcorn.di
 
+import com.mjapa21.popcorn.presentation.MainViewModel
 import com.mjapa21.popcorn.presentation.pages.details.DetailsViewModel
 import com.mjapa21.popcorn.presentation.pages.home.HomeViewModel
 import com.mjapa21.popcorn.presentation.pages.login.LoginViewModel
@@ -22,4 +23,5 @@ val viewModelsModule = module {
             get()
         )
     }
+    viewModelOf(::MainViewModel)
 }
